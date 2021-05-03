@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio</title>
+
+    <!-- настраиваем служебную информацию для браузеров -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+            integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
+            integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
+            crossorigin="anonymous"></script>
+    <!--    font-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+<body style="background-color: darkgrey">
+
+
+<!--<div class="card text-white bg-dark col-12 col-sm-12 col-md-12 col-lg-3">-->
+<!--    <div class="card-header border border-secondary text-center fw-bold fs-2">-->
+<!--        Music-->
+<!--    </div>-->
+<!--    <div class="card-body border p-0 bg-light border-secondary" style="height: 500px">-->
+<!--        &lt;!&ndash;        <div id="canvas"></div>&ndash;&gt;-->
+
+<!--        <div id="carouselExampleControls" class="carousel slide" data-bs-interval="false" data-bs-ride="carousel">-->
+<!--            <div class="carousel-inner">-->
+<!--                <div class="carousel-item active" id="canvas">-->
+<!--                </div>-->
+<!--                <div class="carousel-item ">-->
+<!--                    <div class="input-group  input-group-sm ms-3">-->
+<!--                        <label class="input-group-text" for="inputGroupFile01">add Track</label>-->
+<!--                        <input type="file" class="form-control" id="inputGroupFile01" style="visibility: hidden">-->
+<!--                    </div>-->
+
+
+<!--                    <div class="list-group overflow-auto" id="playlist" style="max-height: 500px;overflow:scroll">-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A second item</button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A third button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                        <button type="button" class="list-group-item list-group-item-action">A fourth button item-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"-->
+<!--                    data-bs-slide="prev" style="width: 15px">-->
+<!--                <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
+<!--                <span class="visually-hidden">Previous</span>-->
+<!--            </button>-->
+<!--            <button class="carousel-control-next" style="width: 15px" type="button"-->
+<!--                    data-bs-target="#carouselExampleControls"-->
+<!--                    data-bs-slide="next">-->
+<!--                <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+<!--                <span class="visually-hidden">Next</span>-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="card-footer border border-secondary">-->
+
+<!--        <div class="p-0" id="audio"></div>-->
+<!--        <div class="d-flex justify-content-center">-->
+<!--            <button type="button" class="btn btn-outline-secondary rounded-pill btn-lg"><i-->
+<!--                    class="fa fa-fast-backward"></i></button>-->
+<!--            <button type="button" class="ml-2 mr-2 btn btn-outline-secondary rounded-circle btn-lg"><i-->
+<!--                    class="fa fa-play"></i></button>-->
+<!--            <button type="button" class="btn btn-outline-secondary rounded-pill btn-lg"><i-->
+<!--                    class="fa fa-fast-forward"></i></button>-->
+<!--        </div>-->
+
+<!--    </div>-->
+<!--</div>-->
+
+
+<script src="assets/js/MusicPlayerModel.js"></script>
+<script src="assets/js/MusicPlayerView.js"></script>
+<script src="assets/js/MusicPlayerController.js"></script>
+<script>
+    var model = new MusicPlayerModel();
+    var controller = new MusicPlayerController(model);
+    var view = new MusicPlayerView(model, controller);
+
+</script>
+</body>
+</html>
