@@ -14,6 +14,7 @@ class MusicPlayerView {
     widthVisualizer; //Ширина холста
     heightVisualizer; //Высота холста
     audio;
+
     currentTrack;
     prevTrack;
     nextTreck;
@@ -49,7 +50,7 @@ class MusicPlayerView {
             let reader = new FileReader();
             reader.onloadend = (e) => {
                 this.addTrackPlaylist(file.files[0].name, file.value, reader.result);
-                this.view.audio.audio.load();
+                this.view.audio.load();
             }
             reader.readAsDataURL(file.files[0]);
 
@@ -58,8 +59,17 @@ class MusicPlayerView {
         //Воспроизведение
         this.btn_play.addEventListener("click", this.controller.play.bind(this.controller));
 
-        this.btn_prev.addEventListener("click", this.controller.play.bind(this.controller));
-        this.btn_next.addEventListener("click", this.controller.play.bind(this.controller));
+        this.btn_prev.addEventListener("click", function () {
+            this.addTrackPlaylist(this.prevTrack);
+            this.prevTrack[0].click();
+        }.bind(this));
+
+        this.btn_next.addEventListener("click", function () {
+            this.addTrackPlaylist(this.nextTreck);
+            this.nextTreck[0].click();
+        }.bind(this));
+
+        // this.btn_next.addEventListener("click", this.controller.play.bind(this.controller));
 
 
     }
@@ -219,22 +229,35 @@ class MusicPlayerView {
     createParticles() {
         //Создание частиц
         this.model.woolAnalasser.createParticles();
+
+        this.createBird();
         //Тут запускаем непосредственно ф-ю отрисовки
         setInterval(this.action.bind(this), 12);
     }
 
+    createBird() {
+        this.model.woolAnalasser.createBirds();
+    }
+
     createAudio() {
-        this.audio = new Analyse();//&&&&&&&
-        this.audio.audio.setAttribute('style', 'width: 100%')
-        this.inputAudio.appendChild(this.audio.audio);
-        this.audio.update = function (bands) {
+        this.model.woolAnalasser.createAudio();
+        this.audio = this.model.woolAnalasser.audio.audio;
+
+        this.audio.setAttribute('style', 'width: 100%')
+        this.inputAudio.appendChild(this.audio);
+        this.model.woolAnalasser.audio.update = function (bands) {
             // alert("Hi");
             var ln = WoolAnalaser.MAX_PARTICLES;
-            // bLn = MAX_BIRDS;
+            var bLn = WoolAnalaser.MAX_BIRDS;
 
             while (ln--) {
                 var loc = this.model.woolAnalasser.particles[ln];
                 loc.pulse = bands[loc.band] / 256;
+            }
+
+            for (var i = 0; i < bLn; i++) {
+                var bird = this.model.woolAnalasser.birds[i];
+                bird.pulse = bands[bird.band] / 256;
             }
 
         }.bind(this);
@@ -293,55 +316,85 @@ class MusicPlayerView {
             var loc = this.model.woolAnalasser.particles[i];
             this.drawParticles(loc);
         }
-    }
 
-    drawTracksOfPlaylist() {
-        this.inputPlaylist.textContent = "";
-        var playlist = this.model.playlist;
-        for (var i = 0; i < playlist.tracks.length; i++) {
-            var track = document.createElement('button');
-            track.className = "list-group-item list-group-item-action";
-            track.type = "button";
-            track.textContent = playlist.tracks[i].name;
-            this.Tracks.push(track, playlist.tracks[i]);
-            this.Tracks.push([track, playlist.tracks[i]]);
-            this.inputPlaylist.appendChild(track);
-
-
-            // track.addEventListener("click", function (track, id) {
-            //     if (this.currentTrack) {
-            //         this.currentTrack.className = "list-group-item list-group-item-action";
-            //     }
-            //     document.getElementById('header').textContent = this.model.playlist.tracks[id].name;
-            //
-            //     if (this.model.playlist.tracks[id-1])
-            //         this.prevTrack =
-            //     this.currentTrack = track;
-            //     track.className = "list-group-item active";
-            //     this.audio.audio.src = this.model.playlist.tracks[id].bob;
-            //     this.audio.audio.load();
-            //     this.audio.audio.play();
-            // }.bind(this, track, i));
-
-
-
-
+        for (var i = 0; i < WoolAnalaser.MAX_BIRDS; i++) {
+            var loc = this.model.woolAnalasser.birds[i];
+            this.drawBird(loc);
+            loc.move();
         }
     }
 
-    drawTracksOfPlaylist2(_track) {
+    // drawTracksOfPlaylist() {
+    //     this.inputPlaylist.textContent = "";
+    //     var playlist = this.model.playlist;
+    //     for (var i = 0; i < playlist.tracks.length; i++) {
+    //         var track = document.createElement('button');
+    //         track.className = "list-group-item list-group-item-action";
+    //         track.type = "button";
+    //         track.textContent = playlist.tracks[i].name;
+    //
+    //         this.Tracks.push([track, playlist.tracks[i]]);
+    //
+    //         this.inputPlaylist.appendChild(track);
+    //         this.addTrackPlaylist([track, playlist.tracks[i]]);
+    //
+    //         // track.addEventListener("click", function (track, id) {
+    //         //     if (this.currentTrack) {
+    //         //         this.currentTrack.className = "list-group-item list-group-item-action";
+    //         //     }
+    //         //     document.getElementById('header').textContent = this.model.playlist.tracks[id].name;
+    //         //
+    //         //     if (this.model.playlist.tracks[id-1])
+    //         //         this.prevTrack =
+    //         //     this.currentTrack = track;
+    //         //     track.className = "list-group-item active";
+    //         //     this.audio.src = this.model.playlist.tracks[id].bob;
+    //         //     this.audio.load();
+    //         //     this.audio.play();
+    //         // }.bind(this, track, i));
+    //
+    //
+    //     }
+    // }
+
+    // addTracksPlaylist() {
+    //     for (var track of this.Tracks) {
+    //         this.addTrackPlaylist(track);
+    //     }
+    // }
+
+    addTrackPlaylist(track) {
+        track[0].addEventListener("click", function () {
+            var id = track[1].id;
+
+            if (this.Tracks[id - 1])
+                this.prevTrack = this.Tracks[id - 1];
+            if (this.Tracks[id + 1])
+                this.nextTreck = this.Tracks[id + 1];
+
+            if (this.currentTrack)
+                this.currentTrack[0].className = "list-group-item list-group-item-action";
+
+            this.currentTrack = track;
+            track[0].className = "list-group-item active";
+            this.audio.src = track[1].bob;
+            this.audio.load();
+            this.audio.play();
+        }.bind(this));
+    }
+
+    drawTracksOfPlaylist(_track) {
+        // var playlist = this.model.playlist;
         var track = document.createElement('button');
         track.className = "list-group-item list-group-item-action";
         track.type = "button";
         track.textContent = _track.name;
         this.inputPlaylist.appendChild(track);
 
-        track.addEventListener("click", function (track,e){
-            e.target.className = "list-group-item active";
-            this.audio.audio.src = track.bob;
-            this.audio.audio.load();
-            this.audio.audio.play();
-        }.bind(this, _track));
+        this.Tracks.push([track, _track]);
+
+        this.inputPlaylist.appendChild(track);
+        this.addTrackPlaylist([track, _track]);
     }
 
 
@@ -371,6 +424,23 @@ class MusicPlayerView {
 
         //Движение частицы
         that.move();
+    }
+
+    drawBird(bird) {
+        var pulse = Math.exp(bird.pulse) || 1;
+        var ctx = this.ctx;
+
+        ctx.save();
+        ctx.beginPath();
+
+        if (bird.direction === "right" && bird.stop) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(bird.img, -bird.x, bird.y, bird.img.width * pulse, bird.img.height * pulse);
+        } else {
+            ctx.drawImage(bird.img, bird.x, bird.y, bird.img.width * pulse, bird.img.height * pulse);
+        }
+        ctx.closePath();
+        ctx.restore();
     }
 
 }

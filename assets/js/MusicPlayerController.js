@@ -18,12 +18,13 @@ class MusicPlayerController {
     play(){
         this.view.audio.audio.play();
     }
+
     addTrackPlaylist(name, href, bob) {
         var playlist = this.model.playlist;
-        var id = playlist.tracks.length + 1;
+        var id = playlist.tracks.length;
         var song = new Track(id, name, href, bob);
         playlist.addTrack(song);
-        this.view.drawTracksOfPlaylist();
+        this.view.drawTracksOfPlaylist(song);
     }
 
     playTrackPlaylist(){

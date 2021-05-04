@@ -59,7 +59,7 @@ class Playlist {
 class WoolAnalaser {
     static MP3_PATH = ""; //Путь к треку
     static MAX_PARTICLES = 20; //Максимальное количсетво кругов
-    static MAX_BIRDS = 10; //Максимальное количество птичек
+    static MAX_BIRDS = 20; //Максимальное количество птичек
     static TWO_PI = Math.PI * 2;
     static SMOOTHING = 0.3;
     static FURIE = 512;
@@ -87,7 +87,7 @@ class WoolAnalaser {
         MIN: 20,
         MAX: 30
     };
-    static IMAGES = []; //Изображение птиц
+    static IMAGES = ['assets/img/red.png', 'assets/img/ell.png', 'assets/img/blue.png', 'assets/img/black.png', 'assets/img/white.png']; //Изображение птиц
     static COLORS = ['#69D2E7', '#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FF4E50', '#F9D423']; //цвета частиц
 
 
@@ -96,7 +96,7 @@ class WoolAnalaser {
     rope;
     birds = []; //Массив птичек
     audio;
-    // freeSpace = window.innerWidth;
+    static freeSpace = WoolAnalaser.SIZE.WIDTH;
     // input = document.getElementById('song');
 
     constructor() {
@@ -134,11 +134,16 @@ class WoolAnalaser {
     }
 
     createParticles() {
-        // var particles = [];//Тут будут храниться все созданные частицы
         var particle = null;
         for (var i = 0; i < WoolAnalaser.MAX_PARTICLES; i++) {
             particle = new Particle();
             this.particles.push(particle);
+        }
+    }
+
+    createBirds() {
+        for (var i = 0; i < WoolAnalaser.MAX_BIRDS; i++) {
+            this.birds.push(new Bird());
         }
     }
 
@@ -182,7 +187,7 @@ class Analyse {
         this.bands = new Uint8Array(this.analyser.frequencyBinCount);
         console.log(this.bands);
 
-        this.audio.addEventListener("canplay",    function() {
+        this.audio.addEventListener("canplay", function () {
             if (!this.source) {
                 // Создает интерфейс, который представляет собой источник звука от аудио или видео элемента
                 this.source = this.context.createMediaElementSource(this.audio);
@@ -239,6 +244,74 @@ class Particle {
         //Возврашам в начало частицы которые ушли за пределы хослста
         if (this.y < -100) {
             this.y = WoolAnalaser.SIZE.HEIGHT;
+        }
+    }
+}
+
+//Птичка
+class Bird {
+    img;
+    up;
+    down;
+    stop;
+    band;
+    direction;
+    finish;
+    level;
+    x;
+    y;
+    speed;
+    jump;
+
+    constructor() {
+        var img = new Image();
+        img.src = WoolAnalaser.random(WoolAnalaser.IMAGES);
+        img.width = 70;
+        img.height = 70;
+        this.up = true;
+        this.down = false;
+        this.stop = false;
+        this.band = Math.floor(WoolAnalaser.random(128));
+        this.direction = WoolAnalaser.random(["right", "left"]);
+        this.finish = false;
+        this.level = WoolAnalaser.random(0.2, 0.6);
+        this.x = WoolAnalaser.SIZE.WIDTH - img.width;
+        this.y = WoolAnalaser.SIZE.HEIGHT / 2 - img.height;
+        this.speed = WoolAnalaser.random(WoolAnalaser.BIRD_SPEED.MIN, WoolAnalaser.BIRD_SPEED.MAX);
+        this.jump = WoolAnalaser.random(WoolAnalaser.BIRD_JUMP.MIN, WoolAnalaser.BIRD_JUMP.MAX);
+        if (this.direction === "right") {
+            this.bord = WoolAnalaser.SIZE.WIDTH - (WoolAnalaser.freeSpace - 260);
+        } else {
+            this.bord = WoolAnalaser.SIZE.WIDTH - (WoolAnalaser.freeSpace - 130);
+        }
+        WoolAnalaser.freeSpace -= 130;
+        this.img = img;
+    }
+
+    move() {
+        if (this.x > this.bord && !this.stop) {
+            this.run();
+        } else {
+            this.stop = true;
+            var pulse = Math.exp(this.pulse) || 1;
+            this.y = (WoolAnalaser.SIZE.HEIGHT / 2 - this.img.height * pulse);
+        }
+    }
+
+    run(){
+        this.x -= this.speed;
+        if (this.y > WoolAnalaser.SIZE.HEIGHT / 2 - this.img.height - this.jump && !this.down) {
+            this.y--;
+        } else {
+            this.up = false;
+            this.down = true;
+        }
+
+        if (this.y < WoolAnalaser.SIZE.HEIGHT / 2 - this.img.height && !this.up) {
+            this.y += this.speed;
+        } else {
+            this.up = true;
+            this.down = false;
         }
     }
 }
